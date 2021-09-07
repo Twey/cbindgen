@@ -361,16 +361,16 @@ impl ExportConfig {
     pub(crate) fn rename(&self, item_name: &mut String) {
         use crate::bindgen::rename::IdentifierType;
         if let Some(name) = self.rename.get(item_name) {
-            *item_name = name.clone();
+            *item_name = name.to_owned();
             if self.renaming_overrides_prefixing {
-                *item_name = self.rename_all.apply_to_pascal_case(item_name, IdentifierType::Item);
+                *item_name = self.rename_all.apply(item_name, IdentifierType::Item).into();
                 return;
             }
         }
         if let Some(ref prefix) = self.prefix {
             item_name.insert_str(0, prefix);
         }
-        *item_name = self.rename_all.apply_to_pascal_case(item_name, IdentifierType::Item);
+        *item_name = self.rename_all.apply(item_name, IdentifierType::Item).into();
     }
 }
 
